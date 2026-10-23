@@ -12,23 +12,32 @@ permissions:
 jobs:
   build-debug-apk:
     name: Android APK + diagnostics
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     timeout-minutes: 45
     steps:
       - name: Checkout source
         uses: actions/checkout@v4
 
       - name: Java 17
-        uses: actions/setup-java@v4
+        uses: actions/setup-java@v5
         with:
           distribution: temurin
           java-version: '17'
 
-      - name: Android SDK command-line tools
-        uses: android-actions/setup-android@v3
-
+      # Ubuntu image provides the Android command-line tools; avoid old 'tools' package.
       - name: Install Android 35 platform and build tools
-        run: sdkmanager 'platforms;android-35' 'build-tools;35.0.0'
+        shell: bash
+        run: |
+          set -euo pipefail
+          SDKROOT="${ANDROID_HOME:-${ANDROID_SDK_ROOT:-/usr/local/lib/android/sdk}}"
+          SDKMGR="$(command -v sdkmanager || true)"
+          if [[ -z "$SDKMGR" ]]; then
+            SDKMGR="$(find "$SDKROOT/cmdline-tools" -type f -name sdkmanager -print -quit)"
+          fi
+          test -n "$SDKMGR" && test -x "$SDKMGR"
+          echo "Using SDK manager: $SDKMGR"
+          "$SDKMGR" --sdk_root="$SDKROOT" --install 'platforms;android-35' 'build-tools;35.0.0' 'platform-tools' 2>&1 | tee android-sdk.log
+          echo "ANDROID_HOME=$SDKROOT" >> "$GITHUB_ENV"
 
       - name: Gradle 8.7
         uses: gradle/actions/setup-gradle@v4
@@ -36,7 +45,16 @@ jobs:
           gradle-version: '8.7'
 
       - name: Validate source bundle
-        run: python3 BUILD_CHECK.py
+        shell: bash
+        run: |
+          set -euo pipefail
+          for f in settings.gradle build.gradle app/build.gradle app/src/main/AndroidManifest.xml app/src/main/java/com/example/phonehud/MainActivity.java app/src/main/java/com/example/phonehud/HudWire.java tests/run_parser_smoke.sh; do
+            test -s "$f" || { echo "ERROR: Missing file: $f"; exit 1; }
+          done
+          grep -Fq 'compileSdk 35' app/build.gradle
+          grep -Fq 'minSdk 24' app/build.gradle
+          grep -Fq 'targetSdk 35' app/build.gradle
+          echo 'PASS: V30 HUD source validated' 
 
       - name: Compile pure Java tests
         run: bash tests/run_parser_smoke.sh
@@ -79,6 +97,8 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: HUD-APK-build-failure-log
-          path: android-build.log
+          path: |
+            android-build.log
+            android-sdk.log
           if-no-files-found: ignore
           retention-days: 14

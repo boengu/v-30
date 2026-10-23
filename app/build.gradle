@@ -1,0 +1,17 @@
+plugins { id 'com.android.application' }
+
+android {
+    namespace 'com.example.phonehud'
+    compileSdk 35
+    defaultConfig {
+        applicationId 'com.example.phonehud'
+        minSdk 24
+        targetSdk 35
+        versionCode 26
+        versionName '2.6.0-naver-v30-beta'
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
+    }
+}

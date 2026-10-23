@@ -1,0 +1,12 @@
+Command: bash tests/run_parser_smoke.sh
+Exit: 0
+PASS: 26 navigation parser checks
+PASS: 6 state checks
+V30_COMPAT_PASS 10
+PASS: 29 Naver-specific checks
+PASS: 33 HUD wire-contract checks
+PASS: 24 camera parser checks
+PASS: 17 link health / protocol checks
+PASS: 19 private-LAN address checks
+
+APK compilation: NOT RUN (Android SDK and Gradle unavailable)

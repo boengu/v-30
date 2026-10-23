@@ -1,0 +1,6 @@
+HUD LINK 2.6 NAVER LG V30 — 2026-10-23
+STATUS: Source beta; debug APK NOT BUILT; NAVER real-device integration UNVERIFIED.
+IMPROVEMENTS: private LAN address allowlist; bounded HTTP connection queue; bounded notification text; prebuild tests & artifact verification in GitHub Actions.
+COMPATIBILITY: Android 7.0+ (minSdk 24), Java 17, AGP 8.6.1, Gradle 8.7, compileSdk 35.
+TESTS: 145 previous Java assertions + 19 LAN address assertions = 164 passed.
+LIMITS: no official NAVER live maneuver SDK; screenshots and HTML are DEMO, not road-safe proof; no APK in zip.

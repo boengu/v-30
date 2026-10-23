@@ -1,0 +1,10 @@
+<resources>
+    <style name="Theme.PhoneHUD" parent="android:style/Theme.Material.NoActionBar">
+        <item name="android:fontFamily">sans</item>
+        <item name="android:windowLightStatusBar">false</item>
+        <item name="android:statusBarColor">#060F18</item>
+        <item name="android:navigationBarColor">#060F18</item>
+        <item name="android:colorAccent">#00E7DF</item>
+        <item name="android:windowActionModeOverlay">true</item>
+    </style>
+</resources>

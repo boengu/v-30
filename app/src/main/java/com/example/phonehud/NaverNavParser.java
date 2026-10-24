@@ -37,7 +37,11 @@ public final class NaverNavParser {
         if (ARRIVED.matcher(full).find())
             return new NavData("ARRIVE", "--", "목적지 도착", "네이버지도", timestamp, key);
         Matcher action = TURN.matcher(full);
-        if (!action.find()) return null;
+        if (!action.find()) {
+            // Some navigation notifications expose a turn symbol and distance as text.
+            // This works only if Android actually exposes the symbol to the listener.
+            return NaverChipParser.parse(pkg, a, b, timestamp, key);
+        }
         // Do not interpret an isolated word like "좌회전" in a place recommendation
         // as an instruction unless it occurs in navigation-like context.
         if (!DISTANCE.matcher(full).find() &&

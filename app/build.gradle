@@ -7,8 +7,8 @@ android {
         applicationId 'com.example.phonehud'
         minSdk 24
         targetSdk 35
-        versionCode 26
-        versionName '2.6.0-naver-v30-beta'
+        versionCode 28
+        versionName '2.8.0-naver-chip-probe'
     }
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_17

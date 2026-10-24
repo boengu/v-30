@@ -251,6 +251,11 @@ public final class MainActivity extends Activity {
             stopService(new Intent(this, HudSenderService.class));
             ui.postDelayed(this::refreshSender, 500);
         });
+        button(statusCard, "3  네이버지도 알림 텍스트/칩 검사", false, () -> {
+            NavNotificationService.scanActiveNow();
+            refreshSender();
+        });
+        label(statusCard, "네이버지도 경로 안내 중 이 버튼을 누르면 읽을 수 있는 텍스트 필드와 맞춤 알림 여부를 보여줍니다. 상단의 503m 안내가 그림으로만 표시되면 현재 알림 권한만으로 추출할 수 없습니다. 검사 결과의 주소는 가리고 공유하세요.", 12, MUTED, false);
         button(statusCard, "20초 데모 안내 보내기 (연결 확인용)", false, () -> {
             NavStore.demo(); refreshSender();
             Toast.makeText(this, "데모 안내 전송: 실제 길안내가 아닙니다", Toast.LENGTH_LONG).show();
@@ -277,6 +282,7 @@ public final class MainActivity extends Activity {
                 + "\n● 알림 서비스: " + (NavNotificationService.listenerConnected ? "연결됨" : "연결 대기")
                 + "\n● 네이버지도 알림 감지: " + observed
                 + "\n● 분석 결과: " + NavNotificationService.lastNaverResult
+                + "\n● 직접 검사 결과: " + NavNotificationService.lastManualScanResult
                 + "\n● HUD 전송: " + server
                 + "\n● 현재 길안내: " + nav
                 + "\n● 단속 정보: " + cameraStatus
